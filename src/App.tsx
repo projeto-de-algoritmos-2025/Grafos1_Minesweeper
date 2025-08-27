@@ -1,10 +1,12 @@
-function App() {
+import { Minesweeper } from "./components/minesweeper";
+import { ThemeProvider } from "./providers/theme-provider";
 
+function App() {
   return (
-    <>
-      <h1>App.tsx</h1>
-    </>
-  )
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Minesweeper />
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
