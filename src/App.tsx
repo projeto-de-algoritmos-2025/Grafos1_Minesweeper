@@ -1,10 +1,14 @@
-import { Minesweeper } from "./components/minesweeper";
+import { Board } from "./components/board";
+import { Header } from "./components/header";
 import { ThemeProvider } from "./providers/theme-provider";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Minesweeper />
+      <div className="flex h-screen w-screen">
+        <Header />
+        <Board />
+      </div>
     </ThemeProvider>
   );
 }
