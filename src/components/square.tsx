@@ -1,13 +1,15 @@
 import { useState, type JSX } from "react";
 import { Button } from "./ui/button";
 import { FlagTriangleRight } from "lucide-react";
+import type { Cell } from "@/types/cell";
 
 type squareProps = {
-  content?: string | JSX.Element;
+  cell: Cell;
+  content?: string | JSX.Element ;
   onClick?: () => void;
 };
 
-export const Square = ({ content, onClick }: squareProps) => {
+export const Square = ({ cell, content, onClick }: squareProps) => {
   const [hasFlag, setHasFlag] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
 
@@ -24,14 +26,14 @@ export const Square = ({ content, onClick }: squareProps) => {
         }}
       >
         <div>
-          {hasFlag && !isRevealed ? (
+          {hasFlag && !cell.isVisible ? (
             <span>
               <FlagTriangleRight />
             </span>
           ) : (
             <></>
           )}
-          {isRevealed ? <span>{content}</span> : <span />}
+          {cell.isVisible ? <span>{cell.content}</span> : <span />}
         </div>
       </Button>
     </div>
