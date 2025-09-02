@@ -2,7 +2,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "./ui/button";
 import { useTheme } from "@/hooks/useTheme";
 import { useEffect } from "react";
-export const Header = () => {
+export const HeaderPage = () => {
   const { setTheme, theme } = useTheme();
 
   useEffect(() => {
