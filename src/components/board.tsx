@@ -19,31 +19,65 @@ export const Board = () => {
 
   const [game, setGame] = useState(initialBoard);
 
-  function createBoard() {
-    const newGame = [...game];
+  function createBoard(x: number, y: number) {
+    const size = 10;
+    const newGame = Array.from({ length: size }, () => Array(size).fill(""));
+
+    const bombQuantity = 10;
     let bombsPlaced = 0;
-    while (bombsPlaced < 10) {
-      const row = Math.floor(Math.random() * 10);
-      const col = Math.floor(Math.random() * 10);
-      if (newGame[row][col] !== "💣") {
+
+    while (bombsPlaced < bombQuantity) {
+      const row = Math.floor(Math.random() * size);
+      const col = Math.floor(Math.random() * size);
+
+      if (!(row === x && col === y) && newGame[row][col] !== "💣") {
         newGame[row][col] = "💣";
         bombsPlaced++;
       }
     }
+
+    const directions = [
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+    ];
+
+    for (let row = 0; row < size; row++) {
+      for (let col = 0; col < size; col++) {
+        if (newGame[row][col] === "💣") {
+          directions.forEach(([dx, dy]) => {
+            const newRow = row + dx;
+            const newCol = col + dy;
+
+            if (
+              newRow >= 0 &&
+              newRow < size &&
+              newCol >= 0 &&
+              newCol < size &&
+              newGame[newRow][newCol] !== "💣"
+            ) {
+              newGame[newRow][newCol] =
+                (parseInt(newGame[newRow][newCol]) || 0) + 1;
+            }
+          });
+        }
+      }
+    }
+
     setGame(newGame);
   }
 
-  function playGame() {
+  function playGame(x: number, y: number) {
     if (!hasGameStarted) {
-      createBoard();
-      console.log("game: ", game);
+      createBoard(x, y);
       setHasGameStarted(true);
       return;
     }
-    // O jogo iniciou?
-    // Criar tabuleiro
-
-    // Expandir tabuleiro
   }
 
   return (
@@ -87,7 +121,7 @@ export const Board = () => {
           {game.map((row, rowIndex: number) => (
             <div key={rowIndex} className="flex flex-col">
               {row.map((cell: string, cellIndex: number) => (
-                <Square key={cellIndex} content={cell} onClick={playGame} />
+                <Square key={cellIndex} content={cell} onClick={() => playGame(rowIndex, cellIndex)} />
               ))}
             </div>
           ))}
