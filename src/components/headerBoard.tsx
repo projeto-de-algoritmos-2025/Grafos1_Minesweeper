@@ -2,14 +2,24 @@ import { FlagTriangleRight, Timer } from "lucide-react";
 import { Button } from "./ui/button";
 import { CardHeader } from "./ui/card";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import type { Cell } from "@/types/cell";
+import type { Cell } from "@/types/cell"
 
 type HeaderBoardProps = {
   setHasGameStarted: (value: boolean) => void, 
   setGame: (value: Cell[][]) => void;
+  segundos: number;
+  resetar: ()=> void;
+  difficulty: "Easy" | "Medium" | "Hard";
+  setDifficulty: (Value: "Easy" | "Medium" | "Hard") =>void;
+};
+
+function formatarTempo(totalSegundos: number) {
+  const minutos = Math.floor(totalSegundos / 60).toString().padStart(2, "0");
+  const segundos = (totalSegundos % 60).toString().padStart(2, "0");
+  return `${minutos}:${segundos}`;
 }
 
-export const HeaderBoard = ({ setHasGameStarted, setGame }: HeaderBoardProps) => {
+export const HeaderBoard = ({ setHasGameStarted, setGame, segundos, resetar, difficulty, setDifficulty }: HeaderBoardProps) => {
 
 
   return (
@@ -24,9 +34,21 @@ export const HeaderBoard = ({ setHasGameStarted, setGame }: HeaderBoardProps) =>
                   Choose the difficulty of the game
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem>Easy</DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>Medium</DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem>Panel</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                checked={difficulty === "Easy"}
+                onCheckedChange={() => setDifficulty("Easy")}
+                >
+                  Easy</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                checked={difficulty === "Medium"}
+                onCheckedChange={()=> setDifficulty("Medium")}
+                >
+                  Medium</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                checked={difficulty === "Hard"}
+                onCheckedChange={()=> setDifficulty("Hard")}
+                >
+                  Hard</DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <div className="flex gap-3">
@@ -34,13 +56,14 @@ export const HeaderBoard = ({ setHasGameStarted, setGame }: HeaderBoardProps) =>
                 <FlagTriangleRight /> <span>10</span>
               </div>
               <div className="flex gap-1 aling-center">
-                <Timer /> <span>0:00</span>
+                <Timer /> <span>{formatarTempo(segundos)}</span>
               </div>
             </div>
             <Button
               onClick={() => {
                 setHasGameStarted(false);
-                setGame(Array(10).fill(Array(10).fill({content: "", isVisible: false})));
+                setGame(Array.from({ length: 10 }, () => Array.from({ length: 10 }, () => ({ content: "", isVisible: false }))))
+                resetar();
               }}
             >
               Reset

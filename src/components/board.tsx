@@ -1,25 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Square } from "./square";
 import { Card, CardContent } from "./ui/card";
 import type { Cell } from "@/types/cell";
 import { HeaderBoard } from "./headerBoard";
+import { useCronometro } from "./cronometro";
 
 export const Board = () => {
   const [hasGameStarted, setHasGameStarted] = useState(false);
+  const {segundos, parar, iniciar, resetar} = useCronometro();
+  const [difficulty, setDifficulty] = useState< "Easy" | "Medium" | "Hard">("Easy");
 
-  const initialBoard: Cell[][] = Array.from({ length: 10 }, () =>
-    Array.from({ length: 10 }, () => ({ content: "", isVisible: false }))
-  );
+  const sizeEasy = 10;
+  const sizeMedium = 13;
+  const sizeHard = 15;
+  const bombQuantityEasy = 10;
+  const bombQuantityMedium = 15;
+  const bombQuantityHard = 20;
 
-  const [game, setGame] = useState<Cell[][]>(initialBoard);
+  function getsBoardDifficult(){
+    switch(difficulty){
+      case "Easy":
+        return {size: sizeEasy, bombQuantity: bombQuantityEasy}
+      case "Medium":
+        return {size: sizeMedium, bombQuantity: bombQuantityMedium}
+      case "Hard":
+        return {size: sizeHard, bombQuantity: bombQuantityHard}
+    }
+  }
+
+  const [boardSize, setBoardSize] = useState(10);
+  const [game, setGame] = useState<Cell[][]>(Array.from({ length: boardSize}, () => Array.from ({ length: boardSize }, () => ({ content: "", isVisible: false}))));
+
+  useEffect(() => {
+    resetGame();
+  }, [difficulty]);
+
+  function resetGame() {
+    const { size } = getsBoardDifficult();
+    setBoardSize(size);
+    const newBoard = Array.from({ length: size }, () =>
+        Array.from({ length: size }, () => ({ content: "", isVisible: false }))
+    );
+    setGame(newBoard);
+    setHasGameStarted(false);
+    resetar();
+    parar();
+}
 
   function createBoard(x: number, y: number) {
-    const size = 10;
+    const {size, bombQuantity} = getsBoardDifficult();
     const newGame: Cell[][] = Array.from({ length: size }, () =>
       Array.from({ length: size }, () => ({ content: "", isVisible: false }))
     );
 
-    const bombQuantity = 10;
     let bombsPlaced = 0;
 
     while (bombsPlaced < bombQuantity) {
@@ -69,9 +102,11 @@ export const Board = () => {
       }
     }
 
+    console.log(newGame);
     return newGame;
   }
 
+  //aplicação da bfs
   function expandBoard(x: number, y: number, board: Cell[][]) {
     const size = board.length;
 
@@ -126,6 +161,7 @@ export const Board = () => {
       const expandedBoard = expandBoard(x, y, newBoard);
       setGame(expandedBoard);
       setHasGameStarted(true);
+      iniciar();
     } else {
       const clickedCell = game[x][y];
       if (clickedCell.content !== "💣") {
@@ -136,16 +172,19 @@ export const Board = () => {
         setGame(expandedBoard);
       } else {
         // Inserir algoritmo para revelar bombas no tabuleiro
+        parar();
         console.log("fim de jogo!");
         return;
       }
     }
   }
+  //adicionar logica de vitoria e parar o cronometro
+  //contar todos os cliques, se for total de coluna x linhas do tabuleiro - numero de bomba. vitoria
 
   return (
     <div className="flex justify-center items-center h-full w-full">
       <Card>
-        <HeaderBoard setHasGameStarted={setHasGameStarted} setGame={setGame} />
+        <HeaderBoard setHasGameStarted={setHasGameStarted} setGame={setGame} segundos={segundos} resetar={resetGame} difficulty={difficulty} setDifficulty={setDifficulty}/>
         <CardContent className="flex">
           {game.map((row, rowIndex: number) => (
             <div key={rowIndex} className="flex flex-col">
@@ -154,6 +193,7 @@ export const Board = () => {
                   key={cellIndex}
                   cell={cell}
                   onClick={() => playGame(rowIndex, cellIndex)}
+                  boardSize={boardSize}
                 />
               ))}
             </div>
@@ -163,3 +203,5 @@ export const Board = () => {
     </div>
   );
 };
+
+
