@@ -2,11 +2,9 @@ import { FlagTriangleRight, Timer } from "lucide-react";
 import { Button } from "./ui/button";
 import { CardHeader } from "./ui/card";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import type { Cell } from "@/types/cell"
 
 type HeaderBoardProps = {
-  setHasGameStarted: (value: boolean) => void, 
-  setGame: (value: Cell[][]) => void;
+  setGameState: (value: "win" | "lost" | "noStarted" | "running") => void
   segundos: number;
   resetar: ()=> void;
   difficulty: "Easy" | "Medium" | "Hard";
@@ -19,7 +17,7 @@ function formatarTempo(totalSegundos: number) {
   return `${minutos}:${segundos}`;
 }
 
-export const HeaderBoard = ({ setHasGameStarted, setGame, segundos, resetar, difficulty, setDifficulty }: HeaderBoardProps) => {
+export const HeaderBoard = ({ setGameState, segundos, resetar, difficulty, setDifficulty }: HeaderBoardProps) => {
 
 
   return (
@@ -61,8 +59,7 @@ export const HeaderBoard = ({ setHasGameStarted, setGame, segundos, resetar, dif
             </div>
             <Button
               onClick={() => {
-                setHasGameStarted(false);
-                setGame(Array.from({ length: 10 }, () => Array.from({ length: 10 }, () => ({ content: "", isVisible: false }))))
+                setGameState("noStarted");
                 resetar();
               }}
             >

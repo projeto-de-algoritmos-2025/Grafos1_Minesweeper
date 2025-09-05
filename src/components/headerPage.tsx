@@ -1,16 +1,12 @@
+import { useTheme } from "@/hooks/useTheme";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "./ui/button";
-import { useTheme } from "@/hooks/useTheme";
-import { useEffect } from "react";
+
 export const HeaderPage = () => {
   const { setTheme, theme } = useTheme();
 
-  useEffect(() => {
-    console.log(theme);
-  }, [theme]);
-
   return (
-    <div className="m-3">
+    <div className="m-3 fixed">
       <Button
         variant="outline"
         size="icon"
