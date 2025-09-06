@@ -11,7 +11,7 @@
 
 ## Sobre
 
-Este projeto teve como objetivo implementar algoritmos de busca em grafos no desenvolvimento de um jogo de campo minado. Ao clicar em um campo vazio, é realizado uma expansão autómatica para todos os campos vazios adjacentes, utilizando o algoritmo de busca em largura(BFS). Além disso, quando o jogador clicar em uma bomba e perde a partida, todas as bombas do tabuleiro são reveladas por meio de uma busca em profundidade(DFS)
+Este projeto teve como objetivo implementar algoritmos de busca em grafos no desenvolvimento de um jogo de campo minado. Ao clicar em um campo vazio, é realizado uma expansão autómatica para todos os campos vazios adjacentes, utilizando o algoritmo de busca em largura(BFS). Além disso, quando o jogador clica em uma bomba e perde a partida, todas as bombas do tabuleiro são reveladas por meio de uma busca em profundidade(DFS)
 
 Principais funcionalidades:
 - Clique com o botão esquerdo: revela o conteúdo do campo selecionado.
