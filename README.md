@@ -1,69 +1,68 @@
-# React + TypeScript + Vite
+# Campo minado
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Conteúdo da Disciplina**: Grafos 1<br>
 
-Currently, two official plugins are available:
+## Alunos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+|Matrícula | Aluno |
+| -- | -- |
+| 211062080  | Leandro Almeida Rocha Santos |
+| 232029210  | Mariana Pereira da Silva |
 
-## Expanding the ESLint configuration
+## Sobre
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Este projeto teve como objetivo implementar algoritmos de busca em grafos no desenvolvimento de um jogo de campo minado. Ao clicar em um campo vazio, é realizado uma expansão autómatica para todos os campos vazios adjacentes, utilizando o algoritmo de busca em largura(BFS). Além disso, quando o jogador clicar em uma bomba e perde a partida, todas as bombas do tabuleiro são reveladas por meio de uma busca em profundidade(DFS)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Principais funcionalidades:
+- Clique com o botão esquerdo: revela o conteúdo do campo selecionado.
+- Clique com o botão direito: marca o campo com uma flag, indicando a possível presença de bombas.
+- Botão reset: reinicia o tabuleiro para uma nova partida.
+- Botão de level: permite selecionar a dificuldade do jogo, variando o tamanho do tabuleiro e a quantidade de bombas de acordo com o nível escolhido.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Screenshots
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+
+---
+
+## Instalação
+
+**Linguagem**: Typescript<br>
+**Framework**: Não utilizado<br>
+**Bibliotecas**: React, schadcn/ui, Radix UI<br>
+
+Pré-requisitos:
+- Node.js (versão recomendada: >= 18.x)
+- npm ou yarn/pnpm como gerenciador de pacotes
+
+Para instalar as dependências, execute o comando:
+
+```cmd
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Uso
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Execute na raiz do projeto:
+   ```cmd
+   yarn run dev
+   ```
+   ou acesse https://projeto-de-algoritmos-2025.github.io/Grafos1_Minesweeper/
+2. Clique com o botão esquerdo para revelar o conteúdo de um campo.
+3. Clique com o botão direito para marcar o campo com uma flag, indicando a possível presença de uma bomba.
+4. O conteúdo revelado pode ser:
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Vazio → não há bombas nos 8 campos vizinhos.
+
+Número (1 a 8) → indica a quantidade de bombas nos campos vizinhos.
+
+Bomba → fim de jogo.
+5. Para alterar o nível de dificuldade, selecione o botão "level". O tamanho do tabuleiro e a quantidade de bombas variam conforme o nível.
+6. Para reiniciar a partida, selecione o botão "reset".
+
+## Apresentação
+
+Vídeo disponível em: 
+
+## Outros
+
+Para dúvidas, sugestões ou melhorias, entre em contato com os autores.
