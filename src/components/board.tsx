@@ -124,6 +124,7 @@ export const Board = () => {
         }
       }
     }
+    console.log(newGame);
     return newGame;
   }
 
@@ -238,6 +239,26 @@ export const Board = () => {
           }
           const expandedBoard = expandBoard(x, y, game);
           setGame(expandedBoard);
+
+        const { size, bombQuantity } = getsBoardDifficult();
+        const totalCells= size**2;
+        const totalNonBombCells = totalCells - bombQuantity;
+
+        let VisibleCellsCount = 0;
+
+        for (let row = 0; row < expandedBoard.length; row++) {
+          for (let col = 0; col < expandedBoard[row].length; col++) {
+            if (expandedBoard[row][col].isVisible) {  
+            VisibleCellsCount++;
+            }
+          }
+        }
+
+        if(VisibleCellsCount === totalNonBombCells){
+          setGameState("win");
+          parar();
+          setShouldOpenEndGameModal(true);
+        }
         } else {
           setGameState("lost");
           revealBombs(x, y, game);
