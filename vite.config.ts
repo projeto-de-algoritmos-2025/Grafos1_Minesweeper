@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/Grafos1_Minesweeper/', 
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

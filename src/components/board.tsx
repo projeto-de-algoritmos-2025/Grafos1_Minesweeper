@@ -257,7 +257,7 @@ export const Board = () => {
     );
 
     setGame(newGame);
-    setFlagsQuantity(flagsQuantity - 1);
+    setFlagsQuantity((prev) => prev + (game[x][y].hasFlag ? 1 : -1));
   }
 
   function playGame(x: number, y: number) {
