@@ -23,7 +23,6 @@ Principais funcionalidades:
 <img width="1910" height="818" alt="image" src="https://github.com/user-attachments/assets/7c5cc856-d6f8-4f31-b457-6e8c82a67845" />
 <img width="1908" height="819" alt="image" src="https://github.com/user-attachments/assets/88d3ffcc-601f-453b-872d-21d2761a3454" />
 <img width="1911" height="818" alt="image" src="https://github.com/user-attachments/assets/576b821f-9c0d-4c6d-9fb4-534f2010ff3d" />
----
 
 ## Instalação
 
