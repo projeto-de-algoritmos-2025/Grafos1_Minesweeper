@@ -9,6 +9,8 @@ type HeaderBoardProps = {
   resetar: ()=> void;
   difficulty: "Easy" | "Medium" | "Hard";
   setDifficulty: (Value: "Easy" | "Medium" | "Hard") =>void;
+  isResetButtonEnabled: boolean;
+  flagsQuantity: number
 };
 
 function formatarTempo(totalSegundos: number) {
@@ -17,7 +19,7 @@ function formatarTempo(totalSegundos: number) {
   return `${minutos}:${segundos}`;
 }
 
-export const HeaderBoard = ({ setGameState, segundos, resetar, difficulty, setDifficulty }: HeaderBoardProps) => {
+export const HeaderBoard = ({ setGameState, segundos, resetar, difficulty, setDifficulty, isResetButtonEnabled, flagsQuantity }: HeaderBoardProps) => {
 
 
   return (
@@ -51,13 +53,14 @@ export const HeaderBoard = ({ setGameState, segundos, resetar, difficulty, setDi
             </DropdownMenu>
             <div className="flex gap-3">
               <div className="flex gap-1 aling-center">
-                <FlagTriangleRight /> <span>10</span>
+                <FlagTriangleRight /> <span>{flagsQuantity}</span>
               </div>
               <div className="flex gap-1 aling-center">
                 <Timer /> <span>{formatarTempo(segundos)}</span>
               </div>
             </div>
             <Button
+              disabled={!isResetButtonEnabled}
               onClick={() => {
                 setGameState("noStarted");
                 resetar();

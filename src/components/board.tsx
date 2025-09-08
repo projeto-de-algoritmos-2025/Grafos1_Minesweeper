@@ -13,13 +13,18 @@ export const Board = () => {
   const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">(
     "Easy"
   );
+  const [isResetButtonEnabled, setIsResetButtonEnabled] = useState(true);
   const [shouldOpenEndGameModal, setShouldOpenEndGameModal] = useState(false);
   const [boardSize, setBoardSize] = useState(getsBoardDifficult()?.size);
+  const [flagsQuantity, setFlagsQuantity] = useState(
+    getsBoardDifficult()?.bombQuantity
+  );
   const [game, setGame] = useState<Cell[][]>(
     Array.from({ length: boardSize }, () =>
       Array.from({ length: boardSize }, () => ({
         content: "",
         isVisible: false,
+        hasFlag: false,
       }))
     )
   );
@@ -45,10 +50,15 @@ export const Board = () => {
   }
 
   function resetGame() {
-    const { size } = getsBoardDifficult();
+    const { size, bombQuantity } = getsBoardDifficult();
+    setFlagsQuantity(bombQuantity);
     setBoardSize(size);
     const newBoard = Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => ({ content: "", isVisible: false }))
+      Array.from({ length: size }, () => ({
+        content: "",
+        isVisible: false,
+        hasFlag: false,
+      }))
     );
     setGame(newBoard);
     setGameState("noStarted");
@@ -60,7 +70,11 @@ export const Board = () => {
     const { size, bombQuantity } = getsBoardDifficult();
     setGameState("running");
     const newGame: Cell[][] = Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => ({ content: "", isVisible: false }))
+      Array.from({ length: size }, () => ({
+        content: "",
+        isVisible: false,
+        hasFlag: false,
+      }))
     );
 
     let bombsPlaced = 0;
@@ -83,7 +97,7 @@ export const Board = () => {
       const key = `${row},${col}`;
 
       if (!safeZone.has(key) && newGame[row][col]?.content !== "💣") {
-        newGame[row][col] = { content: "💣", isVisible: false };
+        newGame[row][col] = { content: "💣", isVisible: false, hasFlag: false };
         bombsPlaced++;
       }
     }
@@ -177,6 +191,7 @@ export const Board = () => {
   }
 
   function revealBombs(x: number, y: number, board: Cell[][]) {
+    setIsResetButtonEnabled(false);
     const updatedBoard = board.map((row) => row.map((cell) => ({ ...cell })));
     const size = updatedBoard.length;
     const visited = new Set<string>();
@@ -224,6 +239,27 @@ export const Board = () => {
     dfs(x, y);
   }
 
+  function markFlag(x: number, y: number) {
+    if (gameState !== "running") return;
+
+    if (game[x][y].isVisible) return;
+
+    const newGame = game.map((row, rowIndex) =>
+      row.map((cell, colIndex) => {
+        if (rowIndex === x && colIndex === y) {
+          return {
+            ...cell,
+            hasFlag: !cell.hasFlag,
+          };
+        }
+        return cell;
+      })
+    );
+
+    setGame(newGame);
+    setFlagsQuantity(flagsQuantity - 1);
+  }
+
   function playGame(x: number, y: number) {
     if (gameState === "noStarted") {
       const newBoard = createBoard(x, y);
@@ -233,6 +269,8 @@ export const Board = () => {
     } else {
       if (gameState === "running") {
         const clickedCell = game[x][y];
+
+        if (clickedCell.hasFlag) return;
         if (clickedCell.content !== "💣") {
           if (clickedCell.isVisible) {
             return;
@@ -240,31 +278,32 @@ export const Board = () => {
           const expandedBoard = expandBoard(x, y, game);
           setGame(expandedBoard);
 
-        const { size, bombQuantity } = getsBoardDifficult();
-        const totalCells= size**2;
-        const totalNonBombCells = totalCells - bombQuantity;
+          const { size, bombQuantity } = getsBoardDifficult();
+          const totalCells = size ** 2;
+          const totalNonBombCells = totalCells - bombQuantity;
 
-        let VisibleCellsCount = 0;
+          let VisibleCellsCount = 0;
 
-        for (let row = 0; row < expandedBoard.length; row++) {
-          for (let col = 0; col < expandedBoard[row].length; col++) {
-            if (expandedBoard[row][col].isVisible) {  
-            VisibleCellsCount++;
+          for (let row = 0; row < expandedBoard.length; row++) {
+            for (let col = 0; col < expandedBoard[row].length; col++) {
+              if (expandedBoard[row][col].isVisible) {
+                VisibleCellsCount++;
+              }
             }
           }
-        }
 
-        if(VisibleCellsCount === totalNonBombCells){
-          setGameState("win");
-          parar();
-          setShouldOpenEndGameModal(true);
-        }
+          if (VisibleCellsCount === totalNonBombCells) {
+            setGameState("win");
+            parar();
+            setShouldOpenEndGameModal(true);
+          }
         } else {
           setGameState("lost");
           revealBombs(x, y, game);
           parar();
           setTimeout(() => {
             setShouldOpenEndGameModal(true);
+            setIsResetButtonEnabled(true);
           }, 4000);
 
           return;
@@ -272,14 +311,6 @@ export const Board = () => {
       }
     }
   }
-
-  //adicionar logica de vitoria e parar o cronometro
-  //contar todos os cliques, se for total de coluna x linhas do tabuleiro - numero de bomba. vitoria
-    // setGameState('win');
-    // parar();
-    // setShouldOpenEndGameModal(true);
-
-  //ajustar lógica das bandeiras no header
 
   useEffect(() => {
     resetGame();
@@ -295,6 +326,8 @@ export const Board = () => {
           resetar={resetGame}
           difficulty={difficulty}
           setDifficulty={setDifficulty}
+          isResetButtonEnabled={isResetButtonEnabled}
+          flagsQuantity={flagsQuantity}
         />
         <CardContent className="flex">
           {game.map((row, rowIndex: number) => (
@@ -305,6 +338,7 @@ export const Board = () => {
                   cell={cell}
                   onClick={() => playGame(rowIndex, cellIndex)}
                   boardSize={boardSize}
+                  onRightClick={() => markFlag(rowIndex, cellIndex)}
                 />
               ))}
             </div>
