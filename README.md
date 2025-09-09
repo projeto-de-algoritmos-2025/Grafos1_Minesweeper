@@ -58,7 +58,7 @@ yarn install
 
 ## Apresentação
 
-Vídeo disponível em: 
+Vídeo disponível em: https://youtu.be/aVHriptyvlI
 
 ## Outros
 
